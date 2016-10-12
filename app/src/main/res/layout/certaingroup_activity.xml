@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/holo_blue_bright"
+        android:orientation="vertical">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text="Group ID:"
+                android:textColor="@android:color/black"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/groupid"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text="12345678"
+                android:textColor="@android:color/black"
+                android:textSize="30dp" />
+
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text="Status:"
+                android:textColor="@android:color/black"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/onegroupstatus"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text="Up"
+                android:textSize="30dp" />
+
+        </LinearLayout>
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
+
+            <RelativeLayout
+                android:layout_width="380dp"
+                android:layout_height="400dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="100dp">
+
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="510dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/messagecontent"
+                android:layout_width="260dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="10dp"
+                android:background="@android:color/white"
+                android:hint="what do you want to say............."
+                android:maxLength="70"
+                android:textColor="@android:color/black" />
+
+            <Button
+                android:id="@+id/sendmessage"
+                android:layout_width="130dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="5dp"
+                android:background="@android:color/holo_green_dark"
+                android:text="Send"
+                android:textSize="25dp" />
+
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="590dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text="All members in this group:"
+                android:textColor="@android:color/black"
+                android:textSize="25dp" />
+
+            <TextView
+                android:id="@+id/allmembers"
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="@android:color/black" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/backtoallgroups"
+                    android:layout_width="200dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@android:color/holo_green_dark"
+                    android:text="back to groups"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:id="@+id/quitgroup"
+                    android:layout_width="190dp"
+                    android:layout_height="70dp"
+                    android:layout_marginLeft="10dp"
+                    android:background="@android:color/holo_green_dark"
+                    android:text="quit group"
+                    android:textSize="20dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>
