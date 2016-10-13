@@ -24,6 +24,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private static HttpEntity entity;
     private static HttpResponse response;
 
-    private static String url = "http://127.0.0.1:8080/InstantMessageServer/jsonmess/getmess.action";//ip address may change
+    private static String url = "http://192.168.0.29:8080/InstantMessageServer/jsonmess/getmess.action";//ip address may change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +78,12 @@ public class MainActivity extends AppCompatActivity {
             Boolean loginresult = false;
 
             client = new DefaultHttpClient();
-            int statecode = response.getStatusLine().getStatusCode();
+            HttpPost request;
+
             try {
+                request = new HttpPost(new URI(url));
+                response = client.execute(request);
+                int statecode = response.getStatusLine().getStatusCode();
                 if (statecode == 200) { //请求成功
                     entity = response.getEntity();
                     if (entity != null) {
