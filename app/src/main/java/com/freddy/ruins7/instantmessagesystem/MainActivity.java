@@ -14,15 +14,21 @@ import com.freddy.ruins7.instantmessagesystem.entity.Group;
 import com.freddy.ruins7.instantmessagesystem.entity.User;
 import com.freddy.ruins7.instantmessagesystem.entity.UserJoin;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.HttpResponse;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
 
     private static EditText username;
     private static EditText password;
@@ -32,13 +38,15 @@ public class MainActivity extends AppCompatActivity {
     private static User loginuser;
     private static Intent intent_ivtime;
 
-    private static HttpClient client；
-    private static HttpPost request；
-    private static HttpEntity entity；
+    private List<HashMap<String, Object>> users;
+    private HashMap<String, Object> user;
 
+    private static HttpClient client;
+    private static HttpPost request;
+    private static HttpEntity entity;
+    private static HttpResponse response;
 
-
-    private static String url = "https://127.0.0.1:8080/InatantMessageServer/user/login.action";//ip address may change
+    private static String url = "http://127.0.0.1:8080/InstantMessageServer/jsonmess/getmess.action";//ip address may change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,42 +76,43 @@ public class MainActivity extends AppCompatActivity {
             Boolean loginresult = false;
 
             client = new DefaultHttpClient();
-            try(response.getStatusLine().getStatusCode() == 200){//请求成功
-                entity = response.getEntity();
-                if (entity != null) {
-                    String out = EntityUtils.toString(entity, "UTF-8");
-                    Log.i(TAG, out);
+            int statecode = response.getStatusLine().getStatusCode();
+            try {
+                if (statecode == 200) { //请求成功
+                    entity = response.getEntity();
+                    if (entity != null) {
+                        String out = EntityUtils.toString(entity, "UTF-8");
+                        Log.i("tag", out);
 
-                    JSONArray jsonArray = new JSONArray(out);
+                        JSONArray jsonArray = new JSONArray(out);
 
-                    videos = new ArrayList<HashMap<String, Object>>();
-                    for(int i = 0; i<jsonArray.length(); i++) {
-                        JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                        int id = jsonObject.getInt("id");
-                        String name = jsonObject.getString("title");
-                        int timelength = jsonObject.getInt("timelength");
+                        users = new ArrayList<HashMap<String, Object>>();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                            int id = jsonObject.getInt("id");
+                            String username = jsonObject.getString("username");
+                            String password = jsonObject.getString("password");
 
-                        video = new HashMap<String, Object>();
-                        video.put("id", id);
-                        video.put("name", name);
-                        video.put("timelength", "时长为:" + timelength);
+                            Log.v("mess",id + " " + username  +  "   "  + password );
+                            user = new HashMap<String, Object>();
+                            user.put("id", id);
+                            user.put("username", username);
+                            user.put("password", password);
 
-                        videos.add(video);
+                            users.add(user);
+                        }
+                        //将数据返回到页面上
+                      /*  SimpleAdapter adapter = new SimpleAdapter(this, users, R.layout.item, new String[]{"name", "timelength"},new int[]{R.id.title, R.id.timelength});
+                             listView.setAdapter(adapter);*/
+                        }else if(entity == null){
+                        //TODO
                     }
-                    SimpleAdapter adapter = new SimpleAdapter(this, videos, R.layout.item,
-                            new String[]{"name", "timelength"},
-                            new int[]{R.id.title, R.id.timelength}
-                    );
-                    listView.setAdapter(adapter);
-
                 }
-        } catch(Exception e) {
-            e.printStackTrace();
-            Log.e(TAG, e.toString());
-            Toast.makeText(MainActivity.this, "获取数据失败", Toast.LENGTH_LONG).show();
-        }
-
-
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("tag", e.toString());
+                Toast.makeText(MainActivity.this, "获取数据失败", Toast.LENGTH_SHORT).show();
+            }
 
 
             // login(loginuser);
