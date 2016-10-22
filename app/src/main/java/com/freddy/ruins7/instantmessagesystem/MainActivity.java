@@ -1,13 +1,13 @@
 package com.freddy.ruins7.instantmessagesystem;
 
 import android.content.Intent;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.freddy.ruins7.instantmessagesystem.entity.Group;
@@ -18,14 +18,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.HttpResponse;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,10 +47,12 @@ public class MainActivity extends AppCompatActivity {
     private static HttpEntity entity;
     private static HttpResponse response;
 
-    private static String url = "http://192.168.0.29:8080/InstantMessageServer/jsonmess/getmess.action";//ip address may change
+//    private static String url = "http://192.168.0.19:8080/InstantMessageServer/user/login.action";//ip address may change
+    private static String url = "http://192.168.191.1:8080/InstantMessageServer/user/login.action";//ip address may change
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //与server 通信
+    //login
     class Login implements View.OnClickListener {
 
         @Override
@@ -74,43 +75,66 @@ public class MainActivity extends AppCompatActivity {
             loginuser.setUsername(username.getText().toString());
             loginuser.setPassword(username.getText().toString());
 
-            //server 通信
-            Boolean loginresult = false;
+            //启动通信线程
+            LoginConn loginConn = new LoginConn();
+            loginConn.start();
+
+        }
+    }
+
+    //查询所有group，以及当前登录用户的join groups
+    public ArrayList<Group> findAllGroups() {
+        allgrouplist = new ArrayList<Group>();
+        //TODO server通信，查询所有groups
+
+        return allgrouplist;
+    }
+
+    public ArrayList<UserJoin> findAllUserJoinGroups(User user) {
+        userjoingrouplist = new ArrayList<UserJoin>();
+        //TODO server通信，查询所有当前登录用户join的groups
+
+        return userjoingrouplist;
+    }
+
+    //login 与server 通信
+    class LoginConn extends Thread {
+
+        @Override
+        public void run() {
+
+            // 初始化消息循环队列，需要在Handler创建之前
+            Looper.prepare();
 
             client = new DefaultHttpClient();
             HttpPost request;
 
             try {
                 request = new HttpPost(new URI(url));
+
+                JSONObject json = new JSONObject();
+
+
+                json.put("loginusersss",loginuser);
+
+                StringEntity se = new StringEntity(json.toString(),"utf-8");
+                request.setEntity(se);
+
+
                 response = client.execute(request);
                 int statecode = response.getStatusLine().getStatusCode();
+                Log.v("connect status",String.valueOf(statecode));
                 if (statecode == 200) { //请求成功
                     entity = response.getEntity();
                     if (entity != null) {
                         String out = EntityUtils.toString(entity, "UTF-8");
-                        Log.i("tag", out);
+                        Log.i("result from server: ", out);
 
-                        JSONArray jsonArray = new JSONArray(out);
 
-                        users = new ArrayList<HashMap<String, Object>>();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                            int id = jsonObject.getInt("id");
-                            String username = jsonObject.getString("username");
-                            String password = jsonObject.getString("password");
-
-                            Log.v("mess",id + " " + username  +  "   "  + password );
-                            user = new HashMap<String, Object>();
-                            user.put("id", id);
-                            user.put("username", username);
-                            user.put("password", password);
-
-                            users.add(user);
-                        }
                         //将数据返回到页面上
                       /*  SimpleAdapter adapter = new SimpleAdapter(this, users, R.layout.item, new String[]{"name", "timelength"},new int[]{R.id.title, R.id.timelength});
                              listView.setAdapter(adapter);*/
-                        }else if(entity == null){
+                    } else if (entity == null) {
                         //TODO
                     }
                 }
@@ -122,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
 
 
             // login(loginuser);
+         /*   Boolean loginresult = false;
+
 
             if (loginresult == true) {
                 //查询所有group
@@ -139,22 +165,9 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent_ivtime);
             } else {
                 Toast.makeText(MainActivity.this, "Wrong username or password, plase try again.", Toast.LENGTH_SHORT).show();
-            }
+            }*/
+
+
         }
-    }
-
-    //查询所有group，以及当前登录用户的join groups
-    public ArrayList<Group> findAllGroups() {
-        allgrouplist = new ArrayList<Group>();
-        //TODO server通信，查询所有groups
-
-        return allgrouplist;
-    }
-
-    public ArrayList<UserJoin> findAllUserJoinGroups(User user) {
-        userjoingrouplist = new ArrayList<UserJoin>();
-        //TODO server通信，查询所有当前登录用户join的groups
-
-        return userjoingrouplist;
     }
 }
