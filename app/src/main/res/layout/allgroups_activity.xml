@@ -30,7 +30,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="center"
-            android:text="Down"
+            android:text=""
             android:textAlignment="center"
             android:textColor="@android:color/black"
             android:textSize="30dp" />
@@ -41,7 +41,8 @@
         android:layout_width="410dp"
         android:layout_height="350dp"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout">
+        android:layout_below="@+id/linearLayout"
+        android:id="@+id/relativeLayout">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -100,56 +101,206 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/groupid1"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:gravity="center"
-                android:text="1"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="20dp" />
 
             <TextView
+                android:id="@+id/groupname1"
                 android:layout_width="140dp"
                 android:layout_height="60dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:gravity="center"
-                android:text="technology"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="20dp" />
 
             <TextView
+                android:id="@+id/groupstatus1"
                 android:layout_width="110dp"
                 android:layout_height="60dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:gravity="center"
-                android:text="Not Join"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="@android:color/black"
                 android:textSize="20dp" />
 
             <Button
+                android:id="@+id/groupjoin1"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
                 android:background="@android:color/holo_green_dark"
-                android:text="Join" />
+                android:text="" />
 
         </LinearLayout>
 
-    </RelativeLayout>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="140dp"
+            android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/logff"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginTop="460dp"
-        android:text="Log off"
-        android:textSize="30dp"
-        android:background="@android:color/holo_green_dark"/>
+            <TextView
+                android:id="@+id/groupid2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/groupname2"
+                android:layout_width="140dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/groupstatus2"
+                android:layout_width="110dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/groupjoin2"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:background="@android:color/holo_green_dark"
+                android:text="" />
+
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="210dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/groupid3"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/groupname3"
+                android:layout_width="140dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/groupstatus3"
+                android:layout_width="110dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/groupjoin3"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:background="@android:color/holo_green_dark"
+                android:text="" />
+
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="280dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/groupid4"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/groupname4"
+                android:layout_width="140dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/groupstatus4"
+                android:layout_width="110dp"
+                android:layout_height="60dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:gravity="center"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
+
+            <Button
+                android:id="@+id/groupjoin4"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:background="@android:color/holo_green_dark"
+                android:text="" />
+
+        </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -164,5 +315,16 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:id="@+id/textView" />
+
+    <Button
+        android:id="@+id/logff"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
+        android:text="Log off"
+        android:textSize="30dp"
+        android:background="@android:color/holo_green_dark"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

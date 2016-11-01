@@ -12,7 +12,7 @@ public class Message implements Serializable{
     private static final Long serialVersionUID = 3L;
     private int mid;
     private int uid;
-    private Date time;
+    private String time;
     private String content;
     private int gid;
 
@@ -32,11 +32,11 @@ public class Message implements Serializable{
         this.uid = uid;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

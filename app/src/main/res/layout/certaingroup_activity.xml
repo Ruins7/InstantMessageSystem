@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -39,6 +40,7 @@
         </LinearLayout>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="50dp"
@@ -65,22 +67,6 @@
                 android:textSize="30dp" />
 
         </LinearLayout>
-
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true">
-
-            <RelativeLayout
-                android:layout_width="380dp"
-                android:layout_height="400dp"
-                android:layout_marginLeft="18dp"
-                android:layout_marginTop="100dp">
-
-
-            </RelativeLayout>
-
-        </ScrollView>
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -131,7 +117,8 @@
                 android:layout_height="140dp"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="20dp" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -159,6 +146,30 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/scroll2"
+            android:layout_width="380dp"
+            android:layout_height="400dp"
+            android:fitsSystemWindows="true"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="18dp"
+            >
+
+            <RelativeLayout
+                android:id="@+id/messview"
+                android:layout_width="380dp"
+                android:layout_height="400dp"
+                android:layout_below="@+id/linearLayout2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="18dp"
+
+                android:orientation="vertical"
+                android:scrollbars="vertical">
+
+
+            </RelativeLayout>
+        </ScrollView>
 
     </RelativeLayout>
 </ScrollView>
