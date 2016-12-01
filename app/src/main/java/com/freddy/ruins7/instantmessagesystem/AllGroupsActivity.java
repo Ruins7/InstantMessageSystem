@@ -3,12 +3,14 @@ package com.freddy.ruins7.instantmessagesystem;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.freddy.ruins7.instantmessagesystem.entity.Group;
 import com.freddy.ruins7.instantmessagesystem.entity.Message;
@@ -80,16 +82,42 @@ public class AllGroupsActivity extends AppCompatActivity {
 
     private static Intent intent_ivtime;
     private static Bundle bundle;
+    private static Handler handler;
+    private static Runnable runnable;
 
-    //private static String url = "http://192.168.191.1:8080/InstantMessageServer/joingroup.action";//ip address may change
-    private static String url = "http://192.168.0.43:8080/InstantMessageServer/joingroup.action";//ip address may change
+    private static String urlbase;
+    private static String url;
+    private static String url2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.allgroups_activity);
 
-        //TODO 连接server，并显示连接状态(需要计时器)
+        urlbase = this.getResources().getString(R.string.url);
+        url = urlbase + "joingroup.action";
+        url2 = urlbase + "findagroup.action";
+
+        //连接server，并显示连接状态(需要计时器)
+        handler = new Handler();
+        runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                handler.postDelayed(this, 5000);//计时器执行过一次之后再次调用该计时器所延迟的时间
+                //要做的事情，这里再次调用此Runnable对象，以实现每秒实现一次的定时器操作
+                Boolean serverStatus = ConnTimer.getConnStatus();
+                if (serverStatus == true) {
+                    status.setText("UP" + "(" + loginuser.getUsername() + ")");
+                    status.setTextColor(Color.parseColor("#4F8300"));
+                } else {
+                    status.setText("DOWN" + "(" + loginuser.getUsername() + ")");
+                    status.setTextColor(Color.parseColor("#B92A0C"));
+                }
+            }
+        };
+        //启动计时器
+        handler.postDelayed(runnable, 1000);//设置后第一次执行该计时器所延迟的时间
 
         //接收登录界面传来的参数
         loginuser = (User) getIntent().getSerializableExtra("loginuser");
@@ -134,9 +162,6 @@ public class AllGroupsActivity extends AppCompatActivity {
         Logoff logofffunction = new Logoff();
         JoinGroup joinGroup = new JoinGroup();
 
-        //能登录成功肯定是连接成功，所以是up
-        status.setText("UP" + "(" + loginuser.getUsername() + ")");
-        status.setTextColor(Color.parseColor("#4F8300"));
         logoff.setOnClickListener(logofffunction);
         groupjoin1.setOnClickListener(joinGroup);
         groupjoin2.setOnClickListener(joinGroup);
@@ -197,6 +222,8 @@ public class AllGroupsActivity extends AppCompatActivity {
             Intent intent_ivtime = new Intent();
             intent_ivtime.setClass(AllGroupsActivity.this, MainActivity.class);
             AllGroupsActivity.this.startActivity(intent_ivtime);
+            //logoff之后停止检查server状态的计时器
+            stopCheckServerStauts(runnable);
         }
     }
 
@@ -205,7 +232,7 @@ public class AllGroupsActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            //TODO 获得group的id,userID，写入server db,然后跳转
+            //获得group的id,userID，写入server db,然后跳转
             String groupaction = ((Button) v).getText().toString();
             int groupid = ((Button) v).getId();
 
@@ -238,18 +265,15 @@ public class AllGroupsActivity extends AppCompatActivity {
     //join group 与 server 通信 继承Thread类
     class JoininConn extends Thread {
 
+        private String statusMessage = null;
         @Override
         public void run() {
-
             // 初始化消息循环队列，需要在Handler创建之前
             Looper.prepare();
-
             client = new DefaultHttpClient();
             HttpPost request;
-
             try {
                 request = new HttpPost(new URI(url));
-
                 //json 封装
                 JSONObject json = new JSONObject();
                 json.put("gid", uj.getGid());
@@ -263,26 +287,23 @@ public class AllGroupsActivity extends AppCompatActivity {
                 request.setEntity(se);
                 //set http header cookie信息
                 request.setHeader("cookie", "JSESSIONID=" + cookies.get(0).getValue());
-                //TODO 网络连接出现问题到时候需要提示
                 try {
                     response = client.execute(request);
                 } catch (Exception e) {
-                    Log.v("tag", "something wrong with network111111");
+                    statusMessage = "something wrong with network";
                 }
-
                 int statecode = response.getStatusLine().getStatusCode();
-                Log.v("connect status", String.valueOf(statecode));
+                //Log.v("connect status", String.valueOf(statecode));
                 if (statecode == 200) { //请求成功
                     entity = response.getEntity();
                     if (entity != null) {
                         String out = EntityUtils.toString(entity, "UTF-8");
-                        Log.i("result from server", out);
+                        //Log.i("result from server", out);
                         if (out.trim().equals("failtojoin")) {
-                            //TODO join失败
+                            statusMessage = "Fail to join";
                         } else {
                             //json解析
                             JSONArray jsonArray = new JSONArray(out);
-
                             JSONArray jsonusers = jsonArray.getJSONArray(0);
                             JSONArray jsonmesses = jsonArray.getJSONArray(1);
 
@@ -312,41 +333,47 @@ public class AllGroupsActivity extends AppCompatActivity {
                             intent_ivtime = new Intent();
                             intent_ivtime.putExtra("allusers", (Serializable) allusers);
                             intent_ivtime.putExtra("allmesses", (Serializable) allmesses);
-                            intent_ivtime.putExtra("loginuser", loginuser);
+                            intent_ivtime.putExtra("loginuser", (Serializable) loginuser);
                             bundle.putInt("groupid", uj.getGid());
                             intent_ivtime.putExtras(bundle);
                             //跳转，将数据发送到下一个页面
                             intent_ivtime.setClass(AllGroupsActivity.this, CertainGroupActivity.class);
                             AllGroupsActivity.this.startActivity(intent_ivtime);
-
+                            //跳转之后停止检查server状态的计时器
+                            stopCheckServerStauts(runnable);
                         }
-
                     } else if (entity == null) {
                         //未请求到返回数据
+                        statusMessage = "There is no return information from server";
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("tag", e.toString());
+               // e.printStackTrace();
             }
+            if(statusMessage != null){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(AllGroupsActivity.this, statusMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
         }
     }
 
     //enter group 与 server 通信 继承Thread类
     class GetGroupConn extends Thread {
 
+        private String statusMessage = null;
         @Override
         public void run() {
-
             // 初始化消息循环队列，需要在Handler创建之前
             Looper.prepare();
-
             client = new DefaultHttpClient();
             HttpPost request;
-
             try {
-                request = new HttpPost(new URI(url));
-
+                request = new HttpPost(new URI(url2));
                 //json 封装
                 JSONObject json = new JSONObject();
                 json.put("username", loginuser.getUsername());
@@ -356,35 +383,30 @@ public class AllGroupsActivity extends AppCompatActivity {
                 //从全局变量获取cookie
                 CookieApplication appCookie = ((CookieApplication) getApplication());
                 List<Cookie> cookies = appCookie.getCookie();
-
                 StringEntity se = new StringEntity(json.toString(), "utf-8");
                 request.setEntity(se);
                 //set http header cookie信息
                 request.setHeader("cookie", "JSESSIONID=" + cookies.get(0).getValue());
-
-                //TODO 网络连接出现问题到时候需要提示
                 try {
                     response = client.execute(request);
                 } catch (Exception e) {
-                    Log.v("tag", "something wrong with network111111");
+                    statusMessage = "something wrong with network";
                 }
 
                 int statecode = response.getStatusLine().getStatusCode();
-                Log.v("connect status", String.valueOf(statecode));
+                //Log.v("connect status", String.valueOf(statecode));
                 if (statecode == 200) { //请求成功
                     entity = response.getEntity();
                     if (entity != null) {
                         String out = EntityUtils.toString(entity, "UTF-8");
                         Log.i("result from server", out);
                         if (out.trim().equals("failtoenter")) {
-                            //TODO enter fail
+                            statusMessage = "Fail to enter";
                         } else {
                             //json解析
                             JSONArray jsonArray = new JSONArray(out);
-
                             JSONArray jsonusers = jsonArray.getJSONArray(0);
                             JSONArray jsonmesses = jsonArray.getJSONArray(1);
-
                             //all groups
                             allusers = new ArrayList<User>();
                             for (int i = 0; i < jsonusers.length(); i++) {
@@ -393,7 +415,6 @@ public class AllGroupsActivity extends AppCompatActivity {
                                 u.setUsername(jsonusers.getJSONObject(i).getString("username"));
                                 allusers.add(u);
                             }
-
                             //all joined groups
                             allmesses = new ArrayList<Message>();
                             for (int i = 0; i < jsonmesses.length(); i++) {
@@ -405,29 +426,41 @@ public class AllGroupsActivity extends AppCompatActivity {
                                 m.setContent(jsonmesses.getJSONObject(i).getString("content"));
                                 allmesses.add(m);
                             }
-
                             //赋值(对象传递)
                             bundle = new Bundle();
                             intent_ivtime = new Intent();
                             intent_ivtime.putExtra("allusers", (Serializable) allusers);
                             intent_ivtime.putExtra("allmesses", (Serializable) allmesses);
-                            intent_ivtime.putExtra("loginuser", loginuser);
+                            intent_ivtime.putExtra("loginuser", (Serializable) loginuser);
                             bundle.putInt("groupid", uj.getGid());
                             intent_ivtime.putExtras(bundle);
                             //跳转，将数据发送到下一个页面
                             intent_ivtime.setClass(AllGroupsActivity.this, CertainGroupActivity.class);
                             AllGroupsActivity.this.startActivity(intent_ivtime);
-
+                            //跳转之后停止检查server状态的计时器
+                            stopCheckServerStauts(runnable);
                         }
-
                     } else if (entity == null) {
                         //未请求到返回数据
+                        statusMessage = "There is no return information from server";
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("tag", e.toString());
+               // e.printStackTrace();
+            }
+            if(statusMessage != null){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(AllGroupsActivity.this, statusMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
+    }
+
+    //停止计时器
+    private void stopCheckServerStauts(Runnable runnable) {
+        handler.removeCallbacks(runnable);
     }
 }

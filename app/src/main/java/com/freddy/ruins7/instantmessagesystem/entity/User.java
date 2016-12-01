@@ -13,7 +13,6 @@ public class User implements Serializable {
     private String username;
     private String password;
 
-
     public int getUid() {
         return uid;
     }
@@ -37,5 +36,29 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        if (o == this) {
+            return true;
+        }
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        User e = (User) o;
+        return (this.getUid() == e.getUid());
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + getUid();
+        return result;
+    }
+
 
 }

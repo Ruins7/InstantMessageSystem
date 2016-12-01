@@ -14,6 +14,7 @@ public class CookieApplication extends Application{
 
     private List<Cookie> cookies;
 
+
     public List<Cookie> getCookie(){
         return cookies;
     }
