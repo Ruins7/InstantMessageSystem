@@ -3,6 +3,7 @@ Android
 
 ## This is the Android end application
 
+The Server end could be found [here](https://github.com/Ruins7/InstantMessageServer)
 
 
 1.  Developed an IM Android application for users to join in groups and chat.
