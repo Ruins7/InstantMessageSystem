@@ -1,7 +1,7 @@
 # InstantMessageSystem
 Android
 
-## This is the Android end application
+## This is the Android end application 
 
 The Server end could be found [here](https://github.com/Ruins7/InstantMessageServer)
 
